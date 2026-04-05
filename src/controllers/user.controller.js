@@ -60,7 +60,6 @@ const registerUser=asyncHandler( async (req, res) => {
 
     const avatarLocalPath = req.files?.avatar[0]?.path;
     const coverImageLocalPath = req.files?.coverImage[0]?.path;
-    // const coverImageLocalPath = req.files?.coverImage?.[0]?.path;
     
     if(!avatarLocalPath){
         throw new ApiError(400, "Avatar is required")
@@ -94,6 +93,7 @@ const registerUser=asyncHandler( async (req, res) => {
         new ApiResponse(200, createdUser, "User registered successfully")
     )
 
+    //DEBUG
     // console.log("register route hit")
     // res.status(200).json({
     //     message: "ok"
@@ -381,7 +381,7 @@ const getUserChannelProfile = asyncHandler( async(req, res) => {
                 as: "subscribedTo"
             }
         },
-        //pipeline for   adding the values of fields of the returned array output
+        //pipeline for adding the values of fields of the returned array output
         {
             $addFields: {
                 subscribersCount: {
