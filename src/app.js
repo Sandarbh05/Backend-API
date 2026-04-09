@@ -28,7 +28,7 @@ import likeRouter from "./routes/like.route.js"
 import tweetRouter from "./routes/tweet.route.js"
 import subscriptionRouter from "./routes/subscription.route.js"
 
-import dashboardRouter from "./routes/dashboard.routes.js"
+import dashboardRouter from "./routes/dashboard.route.js"
 
 //routes declaration
 app.use("/api/v1/users", userRouter)
