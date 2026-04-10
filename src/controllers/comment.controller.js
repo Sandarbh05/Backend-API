@@ -14,32 +14,6 @@ const getVideoComments = asyncHandler(async (req, res) => {
         throw new ApiError(400, "videoId is required")
     }
 
-    // const aggregate = await Comment.aggregate([
-    //     //First Pipeline: To match the video Id
-    //     {
-    //         $match: {
-    //             video: new mongoose.Types.ObjectId(videoId)
-    //         }
-    //     },
-    //     //Second Pipeline: To Pick the comment model from the video model
-    //     {
-    //         $lookup: {
-    //             from: "Videos",
-    //             localField: "_id",
-    //             foreignField: "video",
-    //             as: "videoComments"
-    //         }
-    //     },
-    //     //Third Pipeline: To Only Give comments from the video
-    //     {
-    //         $unwind: "$videoComments"
-    //     },
-    //     //Fourth Pipeline: To Sort out comments before giving
-    //     {
-    //         $sort: { createdAt: -1 }
-    //     }
-    // ]);
-
     const aggregate = Comment.aggregate([
     {
         $match: {
@@ -66,7 +40,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
 })
 
 const addComment = asyncHandler(async (req, res) => {
-
+    // TODO: add a comment to a video
     const { content } = req.body || {}
     const { videoId } = req.params
 
@@ -96,7 +70,6 @@ const addComment = asyncHandler(async (req, res) => {
     return res
     .status(200)
     .json(new ApiResponse(200, comment, "Comment added successfully"))
-    // TODO: add a comment to a video
 })
 
 const updateComment = asyncHandler(async (req, res) => {

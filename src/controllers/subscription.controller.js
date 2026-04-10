@@ -7,7 +7,6 @@ import {asyncHandler} from "../utils/asyncHandler.js"
 
 const toggleSubscription = asyncHandler(async (req, res) => {
     // TODO: toggle subscription
-
     const { channelId } = req.params
     const userId = req.user._id
 
@@ -26,10 +25,6 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     if(!isValidObjectId(userId)){
         throw new ApiError(400, "Invalid userId")
     }
-    
-    // if(String(userId) === String(channelId)){
-    //     throw new ApiError(400, "Cannot subscribe to yourself")
-    // } // turn this block off for testing toggleSubscriptions
 
     const channel = await User.findById(channelId)
 
@@ -51,25 +46,24 @@ const toggleSubscription = asyncHandler(async (req, res) => {
         })
     }
 
-//OPTIMIZATION:
-//     const existing = await Subscription.findOne({
-//     subscriber: userId,
-//     channel: channelId
-// })
+    //OPTIMIZATION:
+    //     const existing = await Subscription.findOne({
+    //     subscriber: userId,
+    //     channel: channelId
+    // })
 
-// if (existing) {
-//     await Subscription.findByIdAndDelete(existing._id)
-// } else {
-//     await Subscription.create({
-//         subscriber: userId,
-//         channel: channelId
-//     })
-// }
+    // if (existing) {
+    //     await Subscription.findByIdAndDelete(existing._id)
+    // } else {
+    //     await Subscription.create({
+    //         subscriber: userId,
+    //         channel: channelId
+    //     })
+    // }
+
     return res
     .status(200)
     .json(new ApiResponse(200, !subscription, "Channel subscription toggled successfully"))
-
-    //check if user is already subscribed to this channel or not, if he is then we just delete the document
 
 })
 
@@ -87,7 +81,6 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
     }
 
     const subscribers = await Subscription.aggregate([
-        //Pipeline - 1 (searching)
         {
             $match: {
                 //have to check for userid == subscriberId
@@ -97,7 +90,6 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
                 //now we got the channel
             }
         },
-        //Pipeline - 2 (adding the subscribers list)
         {
             $lookup: {
                 from: "users",
@@ -135,7 +127,6 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
                 }
             }
         },
-        //Pipeline - 4 (projection)
         {
             $project: {
                 _id: 0,

@@ -22,8 +22,7 @@ const generateAccessAndRefreshTokens = async(userId) => {
 }
 
 const registerUser=asyncHandler( async (req, res) => {
-
-    // todo : console log req.body, response of cloudinary, req.files
+    // Todo : console log req.body, response of cloudinary, req.files
 
     //get user details from frontend
     //validation - not empty
@@ -39,11 +38,7 @@ const registerUser=asyncHandler( async (req, res) => {
 
 
     const { fullName, email, username, password } = req.body;
-    console.log("email : ", email);
-    
-    // if( fullName= ""){
-    //     throw new ApiError(400, "Full Name is required")
-    // }
+
     if(
         [fullName, email, username, password].some((field)=>field?.trim() === "")
     ){
@@ -93,17 +88,10 @@ const registerUser=asyncHandler( async (req, res) => {
         new ApiResponse(200, createdUser, "User registered successfully")
     )
 
-    //DEBUG
-    // console.log("register route hit")
-    // res.status(200).json({
-    //     message: "ok"
-    // })
-
 } ) 
 
 const loginUser=asyncHandler( async(req, res) => {
-    //todo:
-
+    //Todo:
     //req-body --> data
     //username or email(validation)
     //find the user
@@ -127,7 +115,6 @@ const loginUser=asyncHandler( async(req, res) => {
     }
 
     const isPasswordValid = await user.isPasswordCorrect(password);
-    console.log(isPasswordValid)
     if(!isPasswordValid){
         throw new ApiError(404, "Invalid user credentials")
     }
@@ -400,7 +387,7 @@ const getUserChannelProfile = asyncHandler( async(req, res) => {
                 }
             }
         },
-        //pipeline for providing only specific fields not the entire models from db
+        //pipeline for providing only specific fields not the entire fields from db
         {
             $project: {
                 fullName: 1,

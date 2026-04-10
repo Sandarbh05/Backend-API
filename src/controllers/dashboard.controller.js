@@ -8,7 +8,6 @@ import {asyncHandler} from "../utils/asyncHandler.js"
 
 const getChannelStats = asyncHandler(async (req, res) => {
     // TODO: Get the channel stats like total video views, total subscribers, total videos, total likes etc.
-
     const channelId = req.user._id
 
     if(!channelId){
@@ -84,13 +83,6 @@ const getChannelStats = asyncHandler(async (req, res) => {
             }
         },
     ])
-    
-    // likes: 1,
-    // subscribers: 1,
-    // title: 1,
-    // thumbnail: 1,
-    // duration: 1,
-    // isPublished: 1,
 
     return res
     .status(200)
@@ -100,20 +92,7 @@ const getChannelStats = asyncHandler(async (req, res) => {
     totalLikes: 0,
     totalSubscribers: 0
     }, "Channel stats fetched successfully"))
-    //1) video queries to find count -> totalVideos, sum views -> total views, get VideoIds
-    //2) subscription queries to find count -> totalSubscribers
-    //3) Likes count where video C videoIds  
-
-
-
-
-    //Steps
-    //we require information from different modeled documents like Like, Video & Subscription
-    //For counting total Likes we need to write aggregation pipeline ( have to use aggregation as it has its own model )
-    //But inorder to get the video views we have to fetch the views field of the Video model, but we have to make a clear boundary line to decide how video views works, increased and counted systematically (Wall Hit) [ only field required, just query is enough]
-    //We can fetch Subscription model for calculating total subscribers [ required aggregation pipelines ]
-    //And for counting total videos published the user we have to look into the Video model where owner(from Video)==userId (from User) then we apply aggregation pipelines to calculate the size to get total Videos [need aggregation pipelines to count total no. of videos]
-
+    
 })
 
 const getChannelVideos = asyncHandler(async (req, res) => {
@@ -169,7 +148,7 @@ const getChannelVideos = asyncHandler(async (req, res) => {
     return res
     .status(200)
     .json(new ApiResponse(200, videos, "All User Videos fetched successfully"))
-    //we can get all the videos uploaded by the channel but using aggregation pipelines starting with Video model with $match where owner = channelId, we get all the videos but 
+    
 
 })
 

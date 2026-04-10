@@ -8,6 +8,7 @@ import {uploadOnCloudinary} from "../utils/cloudinary.js"
 
 
 const getAllVideos = asyncHandler(async (req, res) => {
+    //TODO: get all videos based on query, sort, pagination
     const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query
 
     //check for userId
@@ -20,7 +21,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid userId")
     }
     
-    // 🔍 match stage
+    //match stage
     const match = {
         owner: new mongoose.Types.ObjectId(userId),
         isPublished: true
@@ -34,12 +35,12 @@ const getAllVideos = asyncHandler(async (req, res) => {
         ];
     }
 
-    // 📊 sort
+    //sort
     const sort = {
         [sortBy]: sortType === "desc" ? -1 : 1
     };
 
-    // 🚀 aggregation pipeline
+    //aggregation pipeline
     const aggregate = Video.aggregate([
         {
             $match: match
@@ -60,7 +61,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         }
     ]);
 
-    // 📄 pagination
+    //pagination
     const options = {
         page: Number(page),
         limit: Number(limit)
@@ -71,23 +72,19 @@ const getAllVideos = asyncHandler(async (req, res) => {
     return res
     .status(200)
     .json(new ApiResponse(200, videos, "Videos fetches successfully"))
-
-    //TODO: get all videos based on query, sort, pagination
+    
 })
 
 const publishAVideo = asyncHandler(async (req, res) => {
+    // TODO: get video, upload to cloudinary, create video
     const { title, description} = req.body
 
     if(!(title && description)){
         throw new ApiError(400, "Title & Description are required")
     }
-
-    console.log(title, description);
     
     const videoLocalPath = req.files?.videoFile?.[0]?.path;
     const thumbnailLocalPath = req.files?.thumbnail?.[0]?.path;
-
-    // console.log(videoLocalPath, thumbnailLocalPath);
 
     if(!(videoLocalPath && thumbnailLocalPath)){
         throw new ApiError(400, "Video & Thumbnail are required")
@@ -96,8 +93,6 @@ const publishAVideo = asyncHandler(async (req, res) => {
     const video = await uploadOnCloudinary(videoLocalPath);
     const thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
     
-    // console.log(video, thumbnail)
-
     if(!(video && thumbnail)){
         throw new ApiError(400, "Upload failed")
     }
@@ -115,10 +110,10 @@ const publishAVideo = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, videotube, "Video Published Successfully"))
 
-    // TODO: get video, upload to cloudinary, create video
 })
 
 const getVideoById = asyncHandler(async (req, res) => {
+    //TODO: get video by id
     const { videoId } = req.params
 
     if(!videoId){
@@ -137,10 +132,10 @@ const getVideoById = asyncHandler(async (req, res) => {
     return res
     .status(200)
     .json(new ApiResponse(200, video, "Video by ID fetched successfully"))
-    //TODO: get video by id
 })
 
 const updateVideo = asyncHandler(async (req, res) => {
+    //TODO: update video details like title, description, thumbnail
     const { videoId } = req.params
 
     if(!videoId){
@@ -155,7 +150,6 @@ const updateVideo = asyncHandler(async (req, res) => {
     const { newTitle, newDescription } = req.body
 
     //Taking new input file field 
-    // const thumbnailLocalPath = req.files?.thumbnail[0].path ?? null;
     const thumbnailLocalPath = (req.file?.path) ?? null;
 
     //Getting old video's information like title, description & thumbnail :
@@ -170,12 +164,7 @@ const updateVideo = asyncHandler(async (req, res) => {
     const description = newDescription ?? oldVideo.description;
 
     const thumbnail = thumbnailLocalPath ? (await uploadOnCloudinary(thumbnailLocalPath)).url : oldVideo.thumbnail;
-    
 
-    //Debug
-    // console.log( "this is title ", title, "this is description : ", description, "time for thumbnail: " , thumbnail)
-
-    //Saving in db
     const video =  await Video.findByIdAndUpdate(
         videoId,
         {
@@ -192,16 +181,10 @@ const updateVideo = asyncHandler(async (req, res) => {
     .status(200)
     .json( new ApiResponse(200, video, "Video details updated successfully"))
 
-    //take new thumbnail, upload it on cloudinary and get a url
-    //take title and description strings and use findByIdAndUpdate method to update the fields
-    //send response
-
-    //one bug to fix : its giving old thumbnail's image in the postman --> its fixed now
-    //TODO: update video details like title, description, thumbnail
-
 })
 
 const deleteVideo = asyncHandler(async (req, res) => {
+    //TODO: delete video
     const { videoId } = req.params
     
     if(!videoId){
@@ -225,7 +208,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
 
     await Video.findByIdAndDelete(videoId);
 
-    //In a single query [Most Optimal] : 
+    //OPTIMIZATION : 
     // const video = await Video.findOneAndDelete({
     //     _id: videoId,
     //     owner: req.user._id
@@ -238,7 +221,6 @@ const deleteVideo = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, {}, "Video deleted successfully"))
 
-    //TODO: delete video
 })
 
 const togglePublishStatus = asyncHandler(async (req, res) => {

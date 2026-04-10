@@ -9,8 +9,8 @@ import { Tweet } from "../models/tweet.model.js"
 
 
 const toggleVideoLike = asyncHandler(async (req, res) => {
-    const {videoId} = req.params
     //TODO: toggle like on video
+    const {videoId} = req.params
 
     if(!videoId){
         throw new ApiError(404, "videoId is required")
@@ -33,13 +33,12 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
 
     if(existingLike){
         await existingLike.deleteOne()
-        // console.log("existing like is : ", existingLike)
+
     }else{
         await Like.create({
             video: videoId,
             likedBy: req.user._id
         })
-        // console.log("newLike is : " , newLike)
     }
 
     return res.
@@ -51,8 +50,8 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
 })
 
 const toggleCommentLike = asyncHandler(async (req, res) => {
-    const {commentId} = req.params
     //TODO: toggle like on comment
+    const {commentId} = req.params
 
     if(!commentId){
         throw new ApiError(404, "commentId is required")
@@ -89,8 +88,8 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
 })
 
 const toggleTweetLike = asyncHandler(async (req, res) => {
-    const { tweetId } = req.params
     //TODO: toggle like on tweet
+    const { tweetId } = req.params
 
     if(!tweetId){
         throw new ApiError(400, "tweetId is required")

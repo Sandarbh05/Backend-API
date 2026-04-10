@@ -168,7 +168,7 @@ const deleteTweet = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Tweet not found")
     }
 
-    // 🔥 Authorization check
+    // Authorization check
     if (tweet.owner.toString() !== userId.toString()) {
         throw new ApiError(403, "Unauthorized")
     }

@@ -6,6 +6,7 @@ import {asyncHandler} from "../utils/asyncHandler.js"
 
 
 const createPlaylist = asyncHandler(async (req, res) => {
+    //TODO: create playlist
     const {name, description} = req.body
     const userId = req.user._id
 
@@ -22,10 +23,10 @@ const createPlaylist = asyncHandler(async (req, res) => {
     return res
     .status(201)
     .json(new ApiResponse(201, playlist, "Playlist created successfully"))
-    //TODO: create playlist
 })
 
 const getUserPlaylists = asyncHandler(async (req, res) => {
+    //TODO: get user playlists
     const {userId} = req.params
 
     if(!userId){
@@ -79,10 +80,10 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, playlist, "Playlists fetched successfully"))
 
-    //TODO: get user playlists
 })
 
 const getPlaylistById = asyncHandler(async (req, res) => {
+    //TODO: get playlist by id
     const { playlistId } = req.params
     
     if(!playlistId){
@@ -92,10 +93,6 @@ const getPlaylistById = asyncHandler(async (req, res) => {
     if(!isValidObjectId(playlistId)){
         throw new ApiError(400, "Invalid playlistId")
     }
-
-    // const playlist = await Playlist.findOne({
-    //     owner: playlistId
-    // })
 
     const playlist = await Playlist.aggregate([
         {
@@ -122,13 +119,11 @@ const getPlaylistById = asyncHandler(async (req, res) => {
                 ]
             }
         },
-        //we are fetching all the fields on frontend so no $project pipeline needed
     ])
 
     return res
     .status(200)
     .json(new ApiResponse(200, playlist[0] || {}, "Playlist fetched successfully"))
-    //TODO: get playlist by id
 })
 
 const addVideoToPlaylist = asyncHandler(async (req, res) => {
@@ -166,6 +161,7 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
 })
 
 const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
+    // TODO: remove video from playlist
     const {playlistId, videoId} = req.params
 
     if(!playlistId){
@@ -207,11 +203,11 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
     return res
     .status(200)
     .json(new ApiResponse(200, {}, "Video removed successfully"))
-    // TODO: remove video from playlist
 
 })
 
 const deletePlaylist = asyncHandler(async (req, res) => {
+    // TODO: delete playlist
     const {playlistId} = req.params
 
     if(!playlistId){
@@ -239,10 +235,10 @@ const deletePlaylist = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, {}, "Playlist deleted successfully"))
 
-    // TODO: delete playlist
 })
 
 const updatePlaylist = asyncHandler(async (req, res) => {
+    //TODO: update playlist
     const {playlistId} = req.params
     const {name, description} = req.body
 
@@ -277,7 +273,6 @@ const updatePlaylist = asyncHandler(async (req, res) => {
     return res
     .status(200)
     .json(new ApiResponse(200, updatedPlaylist, "Playlist updated successfully"))
-    //TODO: update playlist
 })
 
 export {
